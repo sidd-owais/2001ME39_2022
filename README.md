@@ -1,3 +1,2 @@
-# 2001ME39_2022
-
-MD OWAIS SIDDIQUEI
+# CS384_2022
+Tuts Assignments
