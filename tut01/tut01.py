@@ -56,3 +56,31 @@ for i in range(grp):
         list_1[i][0] = str(i*a)+"-"+str(len(data))
     else:
         list_1[i][0] = list_0[i]
+
+# Calculating the number of coordinates in different range
+
+for i in range(grp):
+    start = i*a
+    if(i == 0):
+        start = 1
+    end = (i+1)*a
+    if(i == grp-1):
+        end = min(((i+1)*a),len(data))
+    for j in range (start,end):
+        line = data[j] 
+        if((float(line[7]) > 0) and (float(line[8]) > 0) and (float(line[9]) > 0)):
+            list_1[i][1]+=1
+        if((float(line[7]) < 0) and (float(line[8]) > 0) and (float(line[9]) > 0)):
+            list_1[i][2]+=1
+        if((float(line[7]) < 0) and (float(line[8]) < 0) and (float(line[9]) > 0)):
+            list_1[i][3]+=1
+        if((float(line[7]) > 0) and (float(line[8]) < 0) and (float(line[9]) > 0)):
+            list_1[i][4]+=1
+        if((float(line[7]) > 0) and (float(line[8]) > 0) and (float(line[9]) < 0)):
+            list_1[i][5]+=1
+        if((float(line[7]) < 0) and (float(line[8]) > 0) and (float(line[9]) < 0)):
+            list_1[i][6]+=1
+        if((float(line[7]) < 0) and (float(line[8]) < 0) and (float(line[9]) < 0)):
+            list_1[i][7]+=1
+        if((float(line[7]) > 0) and (float(line[8]) < 0) and (float(line[9]) < 0)):
+            list_1[i][8]+=1
