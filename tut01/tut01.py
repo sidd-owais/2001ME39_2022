@@ -41,3 +41,18 @@ print()
 
 data_1 = csv.writer(open('octant_output.csv','a'))
 data_1.writerow(octant)
+
+a = 5000 # mod value
+
+grp = math.ceil(len(data)/a)
+
+# Creating 2d list for storing number of count of different coordinate in different range
+
+list_1 = [[0 for i in range(9)] for j in range(grp)]
+list_0 = [str(i*a)+"-"+str((i+1)*a) for i in range(grp)]
+
+for i in range(grp):
+    if (i == (grp-1)):
+        list_1[i][0] = str(i*a)+"-"+str(len(data))
+    else:
+        list_1[i][0] = list_0[i]
