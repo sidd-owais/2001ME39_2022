@@ -84,3 +84,15 @@ for i in range(grp):
             list_1[i][7]+=1
         if((float(line[7]) > 0) and (float(line[8]) < 0) and (float(line[9]) < 0)):
             list_1[i][8]+=1
+
+# Printing the 2-d list 
+
+for i in range(grp):
+    print(list_1[i])
+
+# Appending the 2-d list created 
+
+data_2 = csv.writer(open('octant_output.csv','a'))
+
+for i in range(grp):
+    data_2.writerow(list_1[i])
