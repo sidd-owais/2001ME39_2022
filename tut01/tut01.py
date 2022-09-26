@@ -49,7 +49,7 @@ grp = math.ceil(len(data)/a)
 # Creating 2d list for storing number of count of different coordinate in different range
 
 list_1 = [[0 for i in range(9)] for j in range(grp)]
-list_0 = [str(i*a)+"-"+str((i+1)*a) for i in range(grp)]
+list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
 
 for i in range(grp):
     if (i == (grp-1)):
