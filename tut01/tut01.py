@@ -53,19 +53,17 @@ list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
 
 for i in range(grp):
     if (i == (grp-1)):
-        list_1[i][0] = str(i*a)+"-"+str(len(data))
+        list_1[i][0] = str(i*a)+"-"+str(len(data)-2)
     else:
         list_1[i][0] = list_0[i]
 
 # Calculating the number of coordinates in different range
 
 for i in range(grp):
-    start = i*a
-    if(i == 0):
-        start = 1
-    end = (i+1)*a
+    start = i*a+1
+    end = (i+1)*a+1   
     if(i == grp-1):
-        end = min(((i+1)*a),len(data))
+        end = min(((i+1)*a+1),len(data))
     for j in range (start,end):
         line = data[j] 
         if((float(line[7]) > 0) and (float(line[8]) > 0) and (float(line[9]) > 0)):
@@ -93,6 +91,6 @@ for i in range(grp):
 # Appending the 2-d list created 
 
 data_2 = csv.writer(open('octant_output.csv','a'))
-
+# print(grp)
 for i in range(grp):
     data_2.writerow(list_1[i])
