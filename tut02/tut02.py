@@ -131,3 +131,19 @@ for i in range(2,len(df)+2-1):
 oct_3 = pd.DataFrame(list_2)
 print(oct_3,"\n")
 oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
+# Calculating Transition in different range of data and appending in xlsx file
+for i in range(grp):
+    for l in range(1,9):
+        for k in range(1,9):
+            list_2[l][k] = 0
+    start = (i)*a+2
+    end = (i+1)*a+2
+    if(i == grp-1):
+        end = min(((i+1)*a+2),len(df)+2-1)
+    for j in range(start,end):
+        x = sheet.cell(j,11).value
+        y = sheet.cell(j+1,11).value
+        list_2[dic_1[x]][dic_1[y]]+=1
+    tran = pd.DataFrame(list_2)
+    tran.to_excel(writer, startcol = 11 , startrow = 24+(i*11), index=False , header = False)
+writer.close()
