@@ -127,3 +127,7 @@ for i in range(2,len(df)+2-1):
     x = sheet.cell(i,11).value
     y = sheet.cell(i+1,11).value
     list_2[dic_1[x]][dic_1[y]]+=1
+# Printing count of each Transition in overall data and appending it
+oct_3 = pd.DataFrame(list_2)
+print(oct_3,"\n")
+oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
