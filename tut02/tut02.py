@@ -3,9 +3,9 @@ from openpyxl import load_workbook , Workbook
 import math
 df = pd.read_excel("input_octant_transition_identify.xlsx")
 try:
-    wb = load_workbook("input_octant.xlsx")
-except:
     wb = load_workbook("input_octant_transition_identify.xlsx")
+except:
+    print("Input file missing")
 sheet = wb.active
 
 # Creating column for different velocity
