@@ -68,3 +68,49 @@ oct.iloc[0] = octant
 print(oct,"\n")
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
 oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
+# mod value
+a = 5000 
+grp = math.ceil(len(df)/a)
+wb = load_workbook("output.xlsx")
+sheet = wb.active
+# Creating 2d list for storing number of count of different coordinate in different range
+list_1 = [[0 for i in range(9)] for j in range(grp+1)]
+list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
+list_1[0] = ['Groups','+1','-1','+2','-2','+3','-3','+4','-4']
+for i in range(1,grp+1):
+    if (i == (grp)):
+        list_1[i][0] = str((i-1)*a)+"-"+str(len(df)-2)
+    else:
+        list_1[i][0] = list_0[i-1]
+
+# Calculating the number of coordinates in different range
+for i in range(1,grp+1):
+    start = (i-1)*a+2
+    end = (i)*a+2
+    if(i == grp):
+        end = min(((i)*a+2),len(df)+2)
+    for j in range(start,end):
+        x = sheet.cell(j,8).value
+        y = sheet.cell(j,9).value
+        z = sheet.cell(j,10).value
+        if(x > 0 and y > 0 and z > 0):
+            list_1[i][1]+=1
+        if(x < 0 and y > 0 and z > 0):
+            list_1[i][3]+=1
+        if(x < 0 and y < 0 and z > 0):
+            list_1[i][5]+=1
+        if(x > 0 and y < 0 and z > 0):
+            list_1[i][7]+=1
+        if(x > 0 and y > 0 and z < 0):
+            list_1[i][2]+=1
+        if(x < 0 and y > 0 and z < 0):
+            list_1[i][4]+=1
+        if(x < 0 and y < 0 and z < 0):
+            list_1[i][6]+=1
+        if(x > 0 and y < 0 and z < 0):
+            list_1[i][8]+=1
+
+# printing and appending count of each coordinate in different range
+oct_2 = pd.DataFrame(list_1)
+print(oct_2,"\n")
+oct_2.to_excel(writer, startcol = 11 , startrow = 4, index=False , header = False)
