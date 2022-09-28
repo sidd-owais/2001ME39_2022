@@ -1,5 +1,6 @@
 import pandas as pd
 from openpyxl import load_workbook , Workbook
+from openpyxl.styles import PatternFill
 import math
 df = pd.read_excel("input_octant_transition_identify.xlsx")
 
@@ -127,7 +128,6 @@ for i in range(1,grp+1):
 oct_2 = pd.DataFrame(list_1)
 print(oct_2,"\n")
 oct_2.to_excel(writer, startcol = 11 , startrow = 4, index=False , header = False)
-
 # Transition
 list_2 = [[0 for i in range(9)] for j in range(9)]
 list_2[0] = ['Count','+1','-1','+2','-2','+3','-3','+4','-4']
@@ -162,3 +162,8 @@ for i in range(grp):
     tran = pd.DataFrame(list_2)
     tran.to_excel(writer, startcol = 11 , startrow = 24+(i*11), index=False , header = False)
 writer.close()
+# Colouring the particular cell
+wb = load_workbook("output.xlsx")
+sheet = wb.active
+sheet['L5'].fill = PatternFill(patternType = 'solid',fgColor='00FFFF00')
+wb.save('output.xlsx')
