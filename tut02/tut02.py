@@ -2,8 +2,12 @@ import pandas as pd
 from openpyxl import load_workbook , Workbook
 import math
 df = pd.read_excel("input_octant_transition_identify.xlsx")
-wb = load_workbook("input_octant_transition_identify.xlsx")
+try:
+    wb = load_workbook("input_octant.xlsx")
+except:
+    wb = load_workbook("input_octant_transition_identify.xlsx")
 sheet = wb.active
+
 # Creating column for different velocity
 sheet.cell(row = 1,column = 5).value = "U_avg"
 sheet.cell(row = 1,column = 6).value = "V_avg"
@@ -12,14 +16,17 @@ sheet.cell(row = 1,column = 8).value = "U-U_avg"
 sheet.cell(row = 1,column = 9).value = "V-V_avg"
 sheet.cell(row = 1,column = 10).value = "W-W_avg"
 sheet.cell(row = 1,column = 11).value = "Octant"
+
 # Average of different coordinate velocity
 U_avg = df["U"].mean()
 V_avg = df["V"].mean()
 W_avg = df["W"].mean()
+
 # Appending means values to sheet
 sheet.cell(row = 2,column=5,value = U_avg)
 sheet.cell(row = 2,column=6,value = V_avg)
 sheet.cell(row = 2,column=7,value = W_avg)
+
 # Calculating difference of absolute and mean
 for i in range(2,len(df)+2):
     c2 = sheet.cell(i,2).value
@@ -30,6 +37,7 @@ for i in range(2,len(df)+2):
 for i in range(2,len(df)+2):
     c2 = sheet.cell(i,4).value
     sheet.cell(i,10,c2-W_avg)
+
 # Deciding octant of different coordinate
 octant = [0,0,0,0,0,0,0,0] #List for overall count of octant
 for i in range(2,len(df)+2):
@@ -61,6 +69,7 @@ for i in range(2,len(df)+2):
         sheet.cell(i,11,"-4")
         octant[7]+=1
 wb.save("output.xlsx")
+
 # Appending octant list 
 temp = [[0 for i in range(8)] for i in range(1)]
 oct = pd.DataFrame(temp, columns = ['+1','-1','+2','-2','+3','-3','+4','-4'])
@@ -68,11 +77,13 @@ oct.iloc[0] = octant
 print(oct,"\n")
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
 oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
+
 # mod value
 a = 5000 
 grp = math.ceil(len(df)/a)
 wb = load_workbook("output.xlsx")
 sheet = wb.active
+
 # Creating 2d list for storing number of count of different coordinate in different range
 list_1 = [[0 for i in range(9)] for j in range(grp+1)]
 list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
@@ -127,10 +138,12 @@ for i in range(2,len(df)+2-1):
     x = sheet.cell(i,11).value
     y = sheet.cell(i+1,11).value
     list_2[dic_1[x]][dic_1[y]]+=1
+
 # Printing count of each Transition in overall data and appending it
 oct_3 = pd.DataFrame(list_2)
 print(oct_3,"\n")
 oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
+
 # Calculating Transition in different range of data and appending in xlsx file
 for i in range(grp):
     for l in range(1,9):
