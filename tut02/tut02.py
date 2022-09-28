@@ -2,6 +2,8 @@ import pandas as pd
 from openpyxl import load_workbook , Workbook
 import math
 df = pd.read_excel("input_octant_transition_identify.xlsx")
+
+# Using try and except
 try:
     wb = load_workbook("input_octant_transition_identify.xlsx")
 except:
