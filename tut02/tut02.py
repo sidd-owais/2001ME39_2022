@@ -78,12 +78,18 @@ wb.save("output.xlsx")
 temp = [[0 for i in range(8)] for i in range(1)]
 oct = pd.DataFrame(temp, columns = ['+1','-1','+2','-2','+3','-3','+4','-4'])
 oct.iloc[0] = octant
-print(oct,"\n")
+# print(oct,"\n")
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
 oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
 
 # mod value
 a = 5000
+try:
+    if(a < 0):
+        raise Exception()
+except:
+    print("Mod value is negative")
+    exit()
 grp = math.ceil(len(df)/a)
 # Try and except
 try:
@@ -132,7 +138,7 @@ for i in range(1,grp+1):
 
 # printing and appending count of each coordinate in different range
 oct_2 = pd.DataFrame(list_1)
-print(oct_2,"\n")
+# print(oct_2,"\n")
 oct_2.to_excel(writer, startcol = 11 , startrow = 4, index=False , header = False)
 # Transition
 list_2 = [[0 for i in range(9)] for j in range(9)]
@@ -149,7 +155,7 @@ for i in range(2,len(df)+2-1):
 
 # Printing count of each Transition in overall data and appending it
 oct_3 = pd.DataFrame(list_2)
-print(oct_3,"\n")
+# print(oct_3,"\n")
 oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
 
 # Calculating Transition in different range of data and appending in xlsx file
