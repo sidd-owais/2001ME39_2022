@@ -9,6 +9,7 @@ try:
     wb = load_workbook("input_octant_transition_identify.xlsx")
 except:
     print("Input file missing")
+    exit()
 sheet = wb.active
 
 # Creating column for different velocity
@@ -82,9 +83,14 @@ writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
 oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
 
 # mod value
-a = 5000 
+a = 5000
 grp = math.ceil(len(df)/a)
-wb = load_workbook("output.xlsx")
+# Try and except
+try:
+    wb = load_workbook("output.xlsx")
+except:
+    print("Output file missing")
+    exit()
 sheet = wb.active
 
 # Creating 2d list for storing number of count of different coordinate in different range
@@ -93,7 +99,7 @@ list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
 list_1[0] = ['Groups','+1','-1','+2','-2','+3','-3','+4','-4']
 for i in range(1,grp+1):
     if (i == (grp)):
-        list_1[i][0] = str((i-1)*a)+"-"+str(len(df)-2)
+        list_1[i][0] = str((i-1)*a)+"-"+str(len(df)-1)
     else:
         list_1[i][0] = list_0[i-1]
 
