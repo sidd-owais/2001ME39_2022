@@ -62,15 +62,15 @@ for i in range(2,len(df)+2):
     if(x > 0 and y < 0 and z < 0):
         sheet.cell(i,11,"-4")
 wb.save("output.xlsx")
+
 # Longest Subsequence count of every octant
-list_2 = [[0 for i in range(9)] for j in range(9)]
-list_2[0] = ['Count','+1','-1','+2','-2','+3','-3','+4','-4']
+list_1 = ['+1','-1','+2','-2','+3','-3','+4','-4']
 dic_1 = {'+1':1,'-1':2,'+2':3,'-2':4,'+3':5,'-3':6,'+4':7,'-4':8}
+list_2 = [[0 for i in range(3)] for j in range(9)]
+list_2[0] = ['Octant','Longest_Subsquence_Length','Count']
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
-list_3 = [[0 for i in range(3)] for j in range(9)]
-list_3[0] = ['Coordinate','Longest Subsquence Length','Count']
 for i in range(1,9):
-    list_3[i][0] = list_2[0][i]
+    list_2[i][0] = list_1[i-1]
 temp = [0]
 for i in range(2,len(df)+2):
     x = sheet.cell(i,11).value
@@ -81,12 +81,13 @@ for i in range(2,len(df)+2):
         if x == y:
             temp[0]+=1
         else:
-            if list_3[dic_1[y]][1] < temp[0]:
-                list_3[dic_1[y]][1]=temp[0]
-                list_3[dic_1[y]][2]=1
-            elif list_3[dic_1[y]][1] == temp[0]:
-                list_3[dic_1[y]][2]+=1
+            if list_2[dic_1[y]][1] < temp[0]:
+                list_2[dic_1[y]][1]=temp[0]
+                list_2[dic_1[y]][2]=1
+            elif list_2[dic_1[y]][1] == temp[0]:
+                list_2[dic_1[y]][2]+=1
             temp[0]=1
-long_sub = pd.DataFrame(list_3)
+long_sub = pd.DataFrame(list_2)
 long_sub.to_excel(writer, startcol = 12 , startrow = 0, index=False , header = False)
 writer.close()
+
