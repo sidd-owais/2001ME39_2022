@@ -79,7 +79,7 @@ temp = [[0 for i in range(8)] for i in range(1)]
 oct = pd.DataFrame(temp, columns = ['+1','-1','+2','-2','+3','-3','+4','-4'])
 oct.iloc[0] = octant
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
-oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
+oct.to_excel(writer, startcol = 13 , startrow = 0, index=False)
 
 # mod value
 a = 5000
@@ -101,7 +101,7 @@ sheet = wb.active
 # Creating 2d list for storing number of count of different coordinate in different range
 list_1 = [[0 for i in range(9)] for j in range(grp+1)]
 list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
-list_1[0] = ['Groups','+1','-1','+2','-2','+3','-3','+4','-4']
+list_1[0] = ['Mod 5000','+1','-1','+2','-2','+3','-3','+4','-4']
 for i in range(1,grp+1):
     if (i == (grp)):
         list_1[i][0] = str((i-1)*a)+"-"+str(len(df)-1)
@@ -137,10 +137,10 @@ for i in range(1,grp+1):
 
 # printing and appending count of each coordinate in different range
 oct_2 = pd.DataFrame(list_1)
-oct_2.to_excel(writer, startcol = 11 , startrow = 4, index=False , header = False)
+oct_2.to_excel(writer, startcol = 12 , startrow = 4, index=False , header = False)
 # Transition
 list_2 = [[0 for i in range(9)] for j in range(9)]
-list_2[0] = ['Overall','+1','-1','+2','-2','+3','-3','+4','-4']
+list_2[0] = ['Count','+1','-1','+2','-2','+3','-3','+4','-4']
 for i in range(1,9):
     list_2[i][0] = list_2[0][i]
 
@@ -153,7 +153,7 @@ for i in range(2,len(df)+2-1):
 
 # Printing count of each Transition in overall data and appending it
 oct_3 = pd.DataFrame(list_2)
-oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
+oct_3.to_excel(writer, startcol = 12 , startrow = 15, index=False , header = False)
 
 # Calculating Transition in different range of data and appending in xlsx file
 for i in range(grp):
@@ -169,16 +169,26 @@ for i in range(grp):
         y = sheet.cell(j+1,11).value
         list_2[dic_1[x]][dic_1[y]]+=1
     tran = pd.DataFrame(list_2)
-    tran.to_excel(writer, startcol = 11 , startrow = 24+(i*11), index=False , header = False)
+    tran.to_excel(writer, startcol = 12 , startrow = 28+(i*11), index=False , header = False)
 writer.close()
 # Colouring the particular cell
 wb = load_workbook("output.xlsx")
 sheet = wb.active
+sheet['L5'].value = "User Input"
 sheet['L5'].fill = PatternFill(patternType = 'solid',fgColor='00FFFF00')
-# Heading of different range
+sheet['M5'].fill = PatternFill(patternType = 'solid',fgColor='F0FF0F0F')
+# Heading of different range and little bit of formatting
 for i in range(grp):
     if i == grp-1:
-        sheet.cell(row = 25+(i*11),column=12).value = str((i)*a)+"-"+str(len(df)-1)
+        sheet.cell(row = 29+(i*11),column=13).value = str((i)*a)+"-"+str(len(df)-1)
     else:
-        sheet.cell(row = 25+(i*11),column= 12).value=list_0[i]
+        sheet.cell(row = 29+(i*11),column= 13).value=list_0[i]
+for i in range(grp):
+        sheet.cell(row = 28+(i*11),column= 14).value= "To"
+for i in range(grp):
+        sheet.cell(row = 30+(i*11),column= 12).value= "From"
+sheet['M2'].value = "Overall Count"
+sheet['M14'].value = "Overall Transition count"
+sheet['N15']="To"
+sheet['L17']="From"
 wb.save('output.xlsx')
