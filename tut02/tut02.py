@@ -43,7 +43,7 @@ for i in range(2,len(df)+2):
     sheet.cell(i,10,c2-W_avg)
 
 # Deciding octant of different coordinate
-octant = [0,0,0,0,0,0,0,0] #List for overall count of octant
+octant = [0 for i in range(8)] #List for overall count of octant
 for i in range(2,len(df)+2):
     x = sheet.cell(i,8).value
     y = sheet.cell(i,9).value
@@ -78,7 +78,6 @@ wb.save("output.xlsx")
 temp = [[0 for i in range(8)] for i in range(1)]
 oct = pd.DataFrame(temp, columns = ['+1','-1','+2','-2','+3','-3','+4','-4'])
 oct.iloc[0] = octant
-# print(oct,"\n")
 writer = pd.ExcelWriter('output.xlsx', mode = 'a', if_sheet_exists = 'overlay')
 oct.to_excel(writer, startcol = 11 , startrow = 0, index=False)
 
@@ -138,11 +137,10 @@ for i in range(1,grp+1):
 
 # printing and appending count of each coordinate in different range
 oct_2 = pd.DataFrame(list_1)
-# print(oct_2,"\n")
 oct_2.to_excel(writer, startcol = 11 , startrow = 4, index=False , header = False)
 # Transition
 list_2 = [[0 for i in range(9)] for j in range(9)]
-list_2[0] = ['Count','+1','-1','+2','-2','+3','-3','+4','-4']
+list_2[0] = ['Overall','+1','-1','+2','-2','+3','-3','+4','-4']
 for i in range(1,9):
     list_2[i][0] = list_2[0][i]
 
@@ -155,7 +153,6 @@ for i in range(2,len(df)+2-1):
 
 # Printing count of each Transition in overall data and appending it
 oct_3 = pd.DataFrame(list_2)
-# print(oct_3,"\n")
 oct_3.to_excel(writer, startcol = 11 , startrow = 13, index=False , header = False)
 
 # Calculating Transition in different range of data and appending in xlsx file
@@ -178,4 +175,10 @@ writer.close()
 wb = load_workbook("output.xlsx")
 sheet = wb.active
 sheet['L5'].fill = PatternFill(patternType = 'solid',fgColor='00FFFF00')
+# Heading of different range
+for i in range(grp):
+    if i == grp-1:
+        sheet.cell(row = 25+(i*11),column=12).value = str((i)*a)+"-"+str(len(df)-1)
+    else:
+        sheet.cell(row = 25+(i*11),column= 12).value=list_0[i]
 wb.save('output.xlsx')
