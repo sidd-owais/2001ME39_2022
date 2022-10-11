@@ -68,3 +68,43 @@ def octant_longest_subsequence_count_with_range():
         if (x > 0 and y < 0 and z < 0):
             sheet.cell(i, 11, "-4")
     wb.save("output.xlsx")
+    # Longest Subsequence count of every octant and their time interval
+    list_1 = ['+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
+    dic_1 = {'+1': 1, '-1': 2, '+2': 3, '-2': 4,
+             '+3': 5, '-3': 6, '+4': 7, '-4': 8}
+    list_2 = [[0 for i in range(3)] for j in range(9)]
+    list_2[0] = ['Octant', 'Longest_Subsquence_Length', 'Count']
+
+    writer = pd.ExcelWriter('output.xlsx', mode='a', if_sheet_exists='overlay')
+
+    for i in range(1, 9):
+        list_2[i][0] = list_1[i-1]
+    dict_2 = {'+1': [], '-1': [], '+2': [], '-2': [],
+              '+3': [], '-3': [], '+4': [], '-4': []}
+
+    start = 0
+    temp = [0]
+    for i in range(2, len(df)+2):
+        x = sheet.cell(i, 11).value
+        t = sheet.cell(i, 1).value
+        if i == 2:
+            temp[0] += 1
+        else:
+            y = sheet.cell(i-1, 11).value
+            if x == y:
+                temp[0] += 1
+            else:
+                if list_2[dic_1[y]][1] < temp[0]:
+                    list_2[dic_1[y]][1] = temp[0]
+                    list_2[dic_1[y]][2] = 1
+                    dict_2[y] = [start]
+                elif list_2[dic_1[y]][1] == temp[0]:
+                    list_2[dic_1[y]][2] += 1
+                    dict_2[y].append(start)
+                temp[0] = 1
+                start = t
+
+    long_sub = pd.DataFrame(list_2)
+    long_sub.to_excel(writer, startcol=12, startrow=0,
+                      index=False, header=False)
+    writer.close()
