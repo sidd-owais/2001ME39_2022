@@ -108,3 +108,31 @@ def octant_longest_subsequence_count_with_range():
     long_sub.to_excel(writer, startcol=12, startrow=0,
                       index=False, header=False)
     writer.close()
+    # Writing in excel sheet
+
+    wb = load_workbook("output.xlsx")
+    sheet = wb.active
+
+    sheet.cell(1, 17, "octant")
+    sheet.cell(1, 18, "Longest_Subsquence_Length")
+    sheet.cell(1, 19, "Count")
+
+    row_count = 2
+    for i in range(1, 9):
+        octant = list_2[i][0]
+        long_sub_leng = list_2[i][1]
+        count_1 = list_2[i][2]
+        sheet.cell(row_count, 17, octant)
+        sheet.cell(row_count, 18, long_sub_leng)
+        sheet.cell(row_count, 19, count_1)
+        row_count += 1
+        sheet.cell(row_count, 17, "Time")
+        sheet.cell(row_count, 18, "From")
+        sheet.cell(row_count, 19, "To")
+        row_count += 1
+        for j in dict_2[octant]:
+            sheet.cell(row_count, 18, j)
+            sheet.cell(row_count, 19, j+(0.01*(long_sub_leng-1)))
+            row_count += 1
+
+    wb.save("output.xlsx")
