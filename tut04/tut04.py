@@ -67,7 +67,7 @@ def octant_longest_subsequence_count_with_range():
             sheet.cell(i, 11, "-3")
         if (x > 0 and y < 0 and z < 0):
             sheet.cell(i, 11, "-4")
-    wb.save("output.xlsx")
+    wb.save("output_octant_longest_subsequence_with_range.xlsx")
     # Longest Subsequence count of every octant and their time interval
     list_1 = ['+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
     dic_1 = {'+1': 1, '-1': 2, '+2': 3, '-2': 4,
@@ -75,7 +75,7 @@ def octant_longest_subsequence_count_with_range():
     list_2 = [[0 for i in range(3)] for j in range(9)]
     list_2[0] = ['Octant', 'Longest_Subsquence_Length', 'Count']
 
-    writer = pd.ExcelWriter('output.xlsx', mode='a', if_sheet_exists='overlay')
+    writer = pd.ExcelWriter('output_octant_longest_subsequence_with_range.xlsx', mode='a', if_sheet_exists='overlay')
 
     for i in range(1, 9):
         list_2[i][0] = list_1[i-1]
@@ -110,7 +110,7 @@ def octant_longest_subsequence_count_with_range():
     writer.close()
     # Writing in excel sheet
 
-    wb = load_workbook("output.xlsx")
+    wb = load_workbook("output_octant_longest_subsequence_with_range.xlsx")
     sheet = wb.active
 
     sheet.cell(1, 17, "octant")
@@ -135,7 +135,7 @@ def octant_longest_subsequence_count_with_range():
             sheet.cell(row_count, 19, j+(0.01*(long_sub_leng-1)))
             row_count += 1
 
-    wb.save("output.xlsx")
+    wb.save("output_octant_longest_subsequence_with_range.xlsx")
 
 
 ver = python_version()
