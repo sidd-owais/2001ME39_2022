@@ -136,3 +136,18 @@ def octant_longest_subsequence_count_with_range():
             row_count += 1
 
     wb.save("output.xlsx")
+
+
+ver = python_version()
+
+if ver == "3.8.10":
+    print("Correct Version Installed")
+else:
+    print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
+
+# Calling the function
+octant_longest_subsequence_count_with_range()
+
+
+end_time = datetime.now()
+print('Duration of Program Execution: {}'.format(end_time - start_time))
