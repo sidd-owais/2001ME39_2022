@@ -7,10 +7,10 @@ def octant_longest_subsequence_count_with_range():
     import pandas as pd
     from openpyxl import load_workbook
     import math
-    df = pd.read_excel("input_octant_longest_subsequence.xlsx")
+    df = pd.read_excel("input_octant_longest_subsequence_with_range.xlsx")
     # Using try and except
     try:
-        wb = load_workbook("input_octant_longest_subsequence.xlsx")
+        wb = load_workbook("input_octant_longest_subsequence_with_range.xlsx")
     except:
         print("Input file missing")
 
