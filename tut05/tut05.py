@@ -87,6 +87,69 @@ def octant_range_names(mod=5000):
             sheet.cell(i, 11, "-4")
             octant[1][7] += 1
     wb.save("octant_output_ranking_excel.xlsx")
+    # Appending octant list
+    oct_1 = pd.DataFrame(octant)
+    writer = pd.ExcelWriter('octant_output_ranking_excel.xlsx',
+                            mode='a', if_sheet_exists='overlay')
+    oct_1.to_excel(writer, startcol=13, startrow=1, index=False, header=False)
+
+    # mod value
+    a = mod
+    try:
+        if (a < 0):
+            raise Exception()
+    except:
+        print("Mod value is negative")
+        exit()
+    grp = math.ceil(len(df)/a)
+    # Try and except
+    try:
+        wb = load_workbook("octant_output_ranking_excel.xlsx")
+    except:
+        print("Output file missing")
+        exit()
+    sheet = wb.active
+
+    # Creating 2d list for storing number of count of different coordinate in different range
+    list_1 = [[0 for i in range(9)] for j in range(grp+1)]
+    list_0 = [str(i*a)+"-"+str((i+1)*a-1) for i in range(grp)]
+    list_1[0] = ['Mod 5000', '+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
+    for i in range(1, grp+1):
+        if (i == (grp)):
+            list_1[i][0] = str((i-1)*a)+"-"+str(len(df)-1)
+        else:
+            list_1[i][0] = list_0[i-1]
+
+    # Calculating the number of coordinates in different range
+    for i in range(1, grp+1):
+        start = (i-1)*a+2
+        end = (i)*a+2
+        if (i == grp):
+            end = min(((i)*a+2), len(df)+2)
+        for j in range(start, end):
+            x = sheet.cell(j, 8).value
+            y = sheet.cell(j, 9).value
+            z = sheet.cell(j, 10).value
+            if (x > 0 and y > 0 and z > 0):
+                list_1[i][1] += 1
+            if (x < 0 and y > 0 and z > 0):
+                list_1[i][3] += 1
+            if (x < 0 and y < 0 and z > 0):
+                list_1[i][5] += 1
+            if (x > 0 and y < 0 and z > 0):
+                list_1[i][7] += 1
+            if (x > 0 and y > 0 and z < 0):
+                list_1[i][2] += 1
+            if (x < 0 and y > 0 and z < 0):
+                list_1[i][4] += 1
+            if (x < 0 and y < 0 and z < 0):
+                list_1[i][6] += 1
+            if (x > 0 and y < 0 and z < 0):
+                list_1[i][8] += 1
+
+    # printing and appending count of each coordinate in different range
+    oct_2 = pd.DataFrame(list_1)
+    oct_2.to_excel(writer, startcol=12, startrow=3, index=False, header=False)
 
 
 ver = python_version()
