@@ -178,6 +178,23 @@ def octant_range_names(mod=5000):
     oct_4 = pd.DataFrame(list_4)
     oct_4.to_excel(writer, startcol=21, startrow=4, index=False, header=False)
     writer.close()
+    # Calculating Rank1 Octant ID
+    wb = load_workbook("octant_output_ranking_excel.xlsx")
+    sheet = wb.active
+    sheet['AD2'].value = "Rank1 Octant ID"
+    for i in range(8):
+        if list_3[2][i] == 1:
+            sheet['AD3'].value = octant[0][i]
+            break
+
+    count = 5
+
+    for i in range(grp):
+        for j in range(8):
+            if list_4[i][j] == 1:
+                sheet.cell(row=count, column=30).value = octant[0][j]
+                count += 1
+                break
 
 
 ver = python_version()
