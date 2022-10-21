@@ -195,6 +195,42 @@ def octant_range_names(mod=5000):
                 sheet.cell(row=count, column=30).value = octant[0][j]
                 count += 1
                 break
+    # Calculating Rank1 Octant Name
+    sheet['AE2'].value = "Rank1 Octant Name"
+    sheet['AE3'].value = dict_1[sheet['AD3'].value]
+    count = 5
+    for i in range(grp):
+        ans = sheet.cell(row=count, column=30).value
+        sheet.cell(row=count, column=31).value = dict_1[ans]
+        count += 1
+    sheet['M2'].value = "Octant ID"
+    sheet['M3'].value = "Overall Count"
+    sheet['L4'].value = "User Input"
+    wb.save("octant_output_ranking_excel.xlsx")
+    # Calculating Count of Rank 1 Mod Values
+    writer = pd.ExcelWriter('octant_output_ranking_excel.xlsx',
+                            mode='a', if_sheet_exists='overlay')
+    list_5 = [[0 for i in range(3)] for j in range(9)]
+    list_5[0] = ["Octant ID", "Octant Name", "Count of Rank 1 Mod Values"]
+    temp = ["Internal outward interaction", "External outward interaction", "External Ejection", "Internal Ejection",
+            "External inward interaction", "Internal inward interaction", "Internal sweep", "External sweep"]
+    for i in range(1, 9):
+        list_5[i][0] = list_3[0][i-1]
+    for i in range(1, 9):
+        list_5[i][1] = temp[i-1]
+    count = 5
+    dict_2 = {"Internal outward interaction": 1, "External outward interaction": 2, "External Ejection": 3, "Internal Ejection": 4,
+              "External inward interaction": 5, "Internal inward interaction": 6, "Internal sweep": 7, "External sweep": 8}
+    for i in range(grp):
+        ans = sheet.cell(row=count, column=31).value
+        list_5[dict_2[ans]][2] += 1
+        count += 1
+
+    oct_5 = pd.DataFrame(list_5)
+    oct_5.to_excel(writer, startcol=13, startrow=grp +
+                   8, index=False, header=False)
+
+    writer.close()
 
 
 ver = python_version()
