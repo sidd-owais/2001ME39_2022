@@ -150,6 +150,20 @@ def octant_range_names(mod=5000):
     # printing and appending count of each coordinate in different range
     oct_2 = pd.DataFrame(list_1)
     oct_2.to_excel(writer, startcol=12, startrow=3, index=False, header=False)
+    # list for storing rank for overall range
+    list_3 = [[0 for i in range(8)] for j in range(3)]
+    list_3[0] = ['+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
+    list_3[1] = ['Rank1', 'Rank2', 'Rank3',
+                 'Rank4', 'Rank5', 'Rank6', 'Rank7', 'Rank8']
+
+    # Calculating Rank
+    list_3[2] = rankdata(octant[1])
+    for i in range(8):
+        list_3[2][i] = 9 - list_3[2][i]
+
+    # Appending the rank list
+    oct_3 = pd.DataFrame(list_3)
+    oct_3.to_excel(writer, startcol=21, startrow=0, index=False, header=False)
 
 
 ver = python_version()
