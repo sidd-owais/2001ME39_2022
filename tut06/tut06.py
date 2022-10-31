@@ -96,6 +96,41 @@ def attendance_report():
                     l = pd.DataFrame(list_1).T
                     l.to_csv("attendance_report_duplicate.csv",
                              mode='a', index=False, header=False)
+    # Emailing
+    try:
+        from_addr = "md2001ME39@gmail.com"
+        # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
+        pass_of_sender = "bodzwwdevzuxevkr"
+        to_addr = "owais786siddiquei@gmail.com"
+
+        # instance of MIMEMultipart
+        msg = MIMEMultipart()
+        msg['From'] = from_addr
+        msg['To'] = to_addr
+        msg['Subject'] = "2001ME39 attendance_report_duplicate_file"
+        body = "Name - Md 0wais Siddiquei and Roll No. - 2001ME39"
+        msg.attach(MIMEText(body, 'plain'))
+
+        # open the file to be sent
+        filename = "attendance_report_duplicate.csv"
+        attachment = open("attendance_report_duplicate.csv", "rb")
+
+        p = MIMEBase('application', 'octet-stream')
+        p.set_payload((attachment).read())
+        encoders.encode_base64(p)
+        p.add_header('Content-Disposition',
+                     "attachment; filename= %s" % filename)
+        msg.attach(p)
+
+        # creating SMTP session
+        connection = smtplib.SMTP('smtp.gmail.com', 587)
+        connection.starttls()
+        connection.login(from_addr, pass_of_sender)
+        text = msg.as_string()
+        connection.sendmail(from_addr, to_addr, text)
+        connection.quit()
+    except:
+        print("Error in sending mail")
 
 
 ver = python_version()
