@@ -66,6 +66,36 @@ def attendance_report():
     # Creating report for every single student
         df_2.to_csv(list_1[0]+".csv", index=False, header=False)
         l.to_csv(list_1[0]+".csv", mode='a', index=False, header=False)
+    # Creating Duplicate attendence report
+    h_2 = ["Date", "Roll", "Name", "Total count of attendance on that day"]
+    df_3 = pd.DataFrame(h_2).T
+    df_3.to_csv("attendance_report_duplicate.csv", index=False, header=False)
+
+    for ind in df_1.index:
+        temp = df[df["Attendance"].str.match(
+            str(df_1['Roll No'][ind])+'.*', na=False)].reset_index()
+        if len(temp) > 0:
+            dict_1 = {}
+            for i in range(len(temp)):
+                string_1 = temp["Timestamp"][i].split(" ")
+                date = pd.to_datetime(string_1[0], format="%d/%m/%Y")
+                if ((date.day_name() == "Monday") or (date.day_name() == "Thursday")):
+                    string_2 = string_1[1].split(":")
+                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00") and (string_2[2] == "00"))):
+                        if (dict_1.get(string_1[0])) == None:
+                            dict_1[string_1[0]] = 1
+                        else:
+                            dict_1[string_1[0]] += 1
+            for key in dict_1:
+                if (dict_1[key] > 1):
+                    list_1 = [0 for i in range(4)]
+                    list_1[0] = key
+                    list_1[1] = temp["Attendance"][0].split(" ")[0]
+                    list_1[2] = temp["Attendance"][0].split(" ", 1)[1]
+                    list_1[3] = dict_1[key]
+                    l = pd.DataFrame(list_1).T
+                    l.to_csv("attendance_report_duplicate.csv",
+                             mode='a', index=False, header=False)
 
 
 ver = python_version()
