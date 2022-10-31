@@ -63,6 +63,9 @@ def attendance_report():
         l = pd.DataFrame(list_1).T
         l.to_csv("attendance_report_consolidated.csv",
                  mode='a', index=False, header=False)
+    # Creating report for every single student
+        df_2.to_csv(list_1[0]+".csv", index=False, header=False)
+        l.to_csv(list_1[0]+".csv", mode='a', index=False, header=False)
 
 
 ver = python_version()
