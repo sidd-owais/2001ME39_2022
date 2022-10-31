@@ -32,6 +32,37 @@ def attendance_report():
         if ((dt.day_name() == "Monday") or (dt.day_name() == "Thursday")):
             dt_1.add(dt)
     total_lec_taken = len(dt_1)
+    # creating attendance Report
+    for ind in df_1.index:
+        temp = df[df["Attendance"].str.match(
+            str(df_1['Roll No'][ind])+'.*', na=False)].reset_index()
+        list_1 = [0 for i in range(7)]
+        if len(temp) == 0:
+            list_1[0] = df_1["Roll No"][ind]
+            list_1[1] = df_1["Name"][ind]
+            list_1[2] = total_lec_taken
+            list_1[5] = total_lec_taken
+        else:
+            list_1[0] = temp["Attendance"][0].split(" ")[0]
+            list_1[1] = temp["Attendance"][0].split(" ", 1)[1]
+            for i in range(len(temp)):
+                string_1 = temp["Timestamp"][i].split(" ")
+                date = pd.to_datetime(string_1[0], format="%d/%m/%Y")
+                if ((date.day_name() != "Monday") and (date.day_name() != "Thursday")):
+                    list_1[4] += 1
+                else:
+                    string_2 = string_1[1].split(":")
+                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00") and (string_2[2] == "00"))):
+                        list_1[3] += 1
+                    else:
+                        list_1[4] += 1
+            list_1[2] = total_lec_taken
+            list_1[5] = total_lec_taken - list_1[3]
+            list_1[6] = (list_1[3]/list_1[2])
+            list_1[6] = round(list_1[6], 2)
+        l = pd.DataFrame(list_1).T
+        l.to_csv("attendance_report_consolidated.csv",
+                 mode='a', index=False, header=False)
 
 
 ver = python_version()
