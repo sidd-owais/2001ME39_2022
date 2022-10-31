@@ -24,6 +24,15 @@ def attendance_report():
     df_2.to_csv("attendance_report_consolidated.csv",
                 index=False, header=False)
 
+    # Calculation of total lecture
+    dt_1 = set()
+    for ind in df.index:
+        d = df["Timestamp"][ind].split(" ")[0]
+        dt = pd.to_datetime(d, format="%d/%m/%Y")
+        if ((dt.day_name() == "Monday") or (dt.day_name() == "Thursday")):
+            dt_1.add(dt)
+    total_lec_taken = len(dt_1)
+
 
 ver = python_version()
 
