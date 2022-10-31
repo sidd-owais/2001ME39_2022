@@ -101,7 +101,7 @@ def attendance_report():
         from_addr = "md2001ME39@gmail.com"
         # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
         pass_of_sender = "bodzwwdevzuxevkr"
-        to_addr = "owais786siddiquei@gmail.com"
+        to_addr = "cs3842022@gmail.com"
 
         # instance of MIMEMultipart
         msg = MIMEMultipart()
