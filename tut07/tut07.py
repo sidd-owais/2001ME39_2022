@@ -261,6 +261,64 @@ def octant_analysis(mod=5000):
                        startrow=4, index=False, header=False)
 
         writer.close()
+        # Calculating Rank1 Octant ID
+        wb = load_workbook(file_name)
+        sheet = wb.active
+        sheet['AE3'].value = "Rank1 Octant ID"
+        for i in range(8):
+            if list_3[1][i] == 1:
+                sheet['AE4'].value = octant[0][i+1]
+                break
+
+        count = 5
+
+        for i in range(grp):
+            for j in range(8):
+                if list_4[i][j] == 1:
+                    sheet.cell(row=count, column=31).value = octant[0][j+1]
+                    count += 1
+                    break
+
+        # Calculating Rank1 Octant Name
+        sheet['AF3'].value = "Rank1 Octant Name"
+        sheet['AF4'].value = dict_1[sheet['AE4'].value]
+        count = 5
+        for i in range(grp):
+            ans = sheet.cell(row=count, column=31).value
+            sheet.cell(row=count, column=32).value = dict_1[ans]
+            count += 1
+        sheet['N1'].value = "Octant Octant Count"
+        ########################################################################
+        thin_border = Border(left=Side(style='thin'),
+                             right=Side(style='thin'),
+                             top=Side(style='thin'),
+                             bottom=Side(style='thin'))
+
+        sheet.cell(3, 49, "###octant").border = thin_border
+        sheet.cell(3, 50, "Longest_Subsquence_Length").border = thin_border
+        sheet.cell(3, 51, "Count").border = thin_border
+
+        row_count = 4
+        for i in range(1, 9):
+            octant_1 = list_6[i][0]
+            long_sub_leng = list_6[i][1]
+            count_1 = list_6[i][2]
+            sheet.cell(row_count, 49, octant_1).border = thin_border
+            sheet.cell(row_count, 50, long_sub_leng).border = thin_border
+            sheet.cell(row_count, 51, count_1).border = thin_border
+            row_count += 1
+            sheet.cell(row_count, 49, "Time").border = thin_border
+            sheet.cell(row_count, 50, "From").border = thin_border
+            sheet.cell(row_count, 51, "To").border = thin_border
+            row_count += 1
+            for j in dict_2[octant_1]:
+                sheet.cell(row_count, 49).border = thin_border
+                sheet.cell(row_count, 50, j).border = thin_border
+                sheet.cell(row_count, 51, j+(0.01*(long_sub_leng-1))
+                           ).border = thin_border
+                row_count += 1
+
+        #################################################################################
 
 
 ver = python_version()
