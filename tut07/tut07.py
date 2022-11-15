@@ -232,6 +232,36 @@ def octant_analysis(mod=5000):
         list_3[0] = ['Rank of +1', 'Rank of -1', 'Rank of +2',
                      'Rank of -2', 'Rank of +3', 'Rank of -3', 'Rank of +4', 'Rank of -4']
 
+        # Calculating Rank
+        list_3[1] = rankdata(octant[1][1:9], method="dense")
+        m_1 = max(list_3[1])+1
+        for i in range(8):
+            list_3[1][i] = m_1 - list_3[1][i]
+
+        # Appending the rank list
+        oct_3 = pd.DataFrame(list_3)
+        oct_3.style.to_excel(writer, sheet_name=sheet_name, startcol=22, startrow=2,
+                             index=False, header=False)
+
+        # list for storing Rank of data points in different Range
+        dict_1 = {'+1': "Internal outward interaction",
+                  '-1': "External outward interaction", '+2': "External Ejection", '-2': "Internal Ejection", '+3': "External inward interaction", '-3': "Internal inward interaction", '+4': "Internal sweep", '-4': "External sweep"}
+        list_4 = [[0 for j in range(8)] for i in range(grp)]
+
+        # Calculating
+        for i in range(grp):
+            list_4[i] = rankdata(list_1[i][1:9], method="dense")
+            m = max(list_4[i])+1
+            for j in range(8):
+                list_4[i][j] = m - list_4[i][j]
+
+        # Appending the Rank list
+        oct_4 = pd.DataFrame(list_4)
+        oct_4.to_excel(writer, sheet_name=sheet_name, startcol=22,
+                       startrow=4, index=False, header=False)
+
+        writer.close()
+
 
 ver = python_version()
 
