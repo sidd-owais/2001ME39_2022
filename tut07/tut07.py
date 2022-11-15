@@ -320,6 +320,71 @@ def octant_analysis(mod=5000):
 
         #################################################################################
 
+        # Border and coloring
+
+        for i in range(3, 3+(grp+2)):
+            for j in range(14, 33):
+                sheet.cell(i, j).border = thin_border
+
+        for i in range(grp+9, (grp+18)):
+            for j in range(29, 32):
+                sheet.cell(i, j).border = thin_border
+
+        temp_2 = [0, 0]
+        variable = 0
+        for i in range(3, 12):
+            for j in range(35, 44):
+                sheet.cell(i, j).border = thin_border
+                if i != 3 and j != 35 and variable < int(sheet.cell(i, j).value):
+                    variable = sheet.cell(i, j).value
+                    temp_2[0] = i
+                    temp_2[1] = j
+            if (i != 3):
+                sheet.cell(temp_2[0], temp_2[1]).fill = PatternFill(
+                    patternType='solid', fgColor='FFFF00')
+            variable = 0
+
+        for i in range(grp):
+            start = 17+(i*14)
+            for r in range(start, start+9):
+                for c in range(35, 44):
+                    sheet.cell(r, c).border = thin_border
+                    if r != start and c != 35 and variable < int(sheet.cell(r, c).value):
+                        variable = sheet.cell(r, c).value
+                        temp_2[0] = r
+                        temp_2[1] = c
+                if (i != start):
+                    sheet.cell(temp_2[0], temp_2[1]).fill = PatternFill(
+                        patternType='solid', fgColor='FFFF00')
+                variable = 0
+
+        for i in range(3, 12):
+            for j in range(45, 48):
+                sheet.cell(i, j).border = thin_border
+
+        for i in range(4, 4+grp+1):
+            for j in range(23, 31):
+                if (sheet.cell(i, j).value == 1):
+                    sheet.cell(i, j).fill = PatternFill(
+                        patternType='solid', fgColor='FFFF00')
+
+        # Formatting
+
+        for i in range(grp):
+            start_row = 17 + (i*14)
+            col = 35
+            sheet.cell(start_row-1, col).value = list_1[i][0]
+            sheet.cell(start_row-2, col).value = "Mod Transition Count"
+            sheet.cell(start_row+1, col-1).value = "From"
+
+        sheet['AI1'] = "Overall Transition Count"
+        sheet['AS1'] = "Longest Subsequence Length"
+        sheet['AW1'] = "Longest Subsequence Length with Range"
+        sheet['M4'] = "Mod "+str(a)
+        sheet['AH4'] = "From"
+        ##########################################################################
+        wb.save(file_name)
+
 
 ver = python_version()
 
