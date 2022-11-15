@@ -1,18 +1,17 @@
+import pandas as pd
+import datetime
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+import os
 from platform import python_version
 from datetime import datetime
 start_time = datetime.now()
 
 
 def attendance_report():
-    import pandas as pd
-    import datetime
-    import smtplib
-    from email.mime.multipart import MIMEMultipart
-    from email.mime.text import MIMEText
-    from email.mime.base import MIMEBase
-    from email import encoders
-    import os
-
     try:
         df = pd.read_csv("input_attendance.csv")
         df_1 = pd.read_csv("input_registered_students.csv")
@@ -30,9 +29,11 @@ def attendance_report():
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
     os.chdir(final_directory)
+
     # Creating consolidate report
     for ind in df.index:
         d = df["Timestamp"][ind].split(" ")[0]
+        d = d.replace("-", "/")
         dt = pd.to_datetime(d, format="%d/%m/%Y")
         if ((dt.day_name() == "Monday") or (dt.day_name() == "Thursday")):
             dt = dt.date()
@@ -68,10 +69,11 @@ def attendance_report():
             list_1[1] = temp["Attendance"][0].split(" ", 1)[1]
             for i in range(len(temp)):
                 string_1 = temp["Timestamp"][i].split(" ")
+                string_1[0] = string_1[0].replace("-", "/")
                 date = pd.to_datetime(string_1[0], format="%d/%m/%Y")
                 if ((date.day_name() == "Monday") or (date.day_name() == "Thursday")):
                     string_2 = string_1[1].split(":")
-                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00") and (string_2[2] == "00"))):
+                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00"))):
                         date = date.date()
                         date = date.strftime("%d/%m/%Y")
                         if (list_1[dat_1[date]] != "P"):
@@ -94,6 +96,7 @@ def attendance_report():
         temp = df[df["Attendance"].str.match(
             str(df_1['Roll No'][ind])+'.*', na=False)].reset_index()
         list_2 = [['', '', '', 0, 0, 0, 0, 0] for j in range(len(s_1)+2)]
+        list_2[1] = ['', '', '', '', '', '', '', '']
         list_2[0] = list_0
         for keys in dat_1:
             list_2[dat_1[keys]][0] = keys
@@ -107,12 +110,13 @@ def attendance_report():
             list_2[1][2] = temp["Attendance"][0].split(" ", 1)[1]
             for i in range(len(temp)):
                 string_1 = temp["Timestamp"][i].split(" ")
+                string_1[0] = string_1[0].replace("-", "/")
                 date = pd.to_datetime(string_1[0], format="%d/%m/%Y")
                 if ((date.day_name() == "Monday") or (date.day_name() == "Thursday")):
                     string_2 = string_1[1].split(":")
                     date = date.date()
                     date = date.strftime("%d/%m/%Y")
-                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00") and (string_2[2] == "00"))):
+                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00"))):
                         if (list_2[dat_1[date]][4]) == 0:
                             list_2[dat_1[date]][4] = 1
                             list_2[dat_1[date]][3] += 1
@@ -134,17 +138,18 @@ def attendance_report():
         from_addr = "md2001ME39@gmail.com"  # sender address
         # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
         pass_of_sender = "bodzwwdevzuxevkr"
-        to_addr = "owais786siddiquei@gmail.com"  # Receiver address
+        to_addr = "cs3842022@gmail.com"  # Receiver address
 
         # instance of MIMEMultipart
         msg = MIMEMultipart()
         msg['From'] = from_addr
         msg['To'] = to_addr
-        msg['Subject'] = "2001ME39 attendance_report_duplicate_file"
+        msg['Subject'] = "2001ME39 attendance_report_consolidated.xlsx file"
         body = "Name - Md 0wais Siddiquei and Roll No. - 2001ME39"
         msg.attach(MIMEText(body, 'plain'))
 
         # open the file to be sent
+        os.chdir(final_directory)
         filename = "attendance_report_consolidated.xlsx"
         try:
             attachment = open("attendance_report_consolidated.xlsx", "rb")
@@ -178,7 +183,6 @@ else:
 
 
 attendance_report()
-
 
 # This shall be the last lines of the code.
 end_time = datetime.now()
