@@ -194,6 +194,43 @@ def octant_analysis(mod=5000):
                           (i*14), index=False, header=False)
 
         ##################################################################################
+        # Longest Subsequence count of every octant
+        list_00 = ['+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
+        dict_2 = {'+1': [], '-1': [], '+2': [], '-2': [],
+                  '+3': [], '-3': [], '+4': [], '-4': []}
+        list_6 = [[0 for i in range(3)] for j in range(9)]
+        list_6[0] = ['Octant##', 'Longest_Subsquence_Length', 'Count']
+        for i in range(1, 9):
+            list_6[i][0] = list_00[i-1]
+        temp_1 = [0]
+        start = 0
+        for i in range(2, len(df)+2):
+            x = sheet.cell(i, 11).value
+            t = sheet.cell(i, 1).value
+            if i == 2:
+                temp_1[0] += 1
+            else:
+                y = sheet.cell(i-1, 11).value
+                if x == y:
+                    temp_1[0] += 1
+                else:
+                    if list_6[dic_1[y]][1] < temp_1[0]:
+                        list_6[dic_1[y]][1] = temp_1[0]
+                        list_6[dic_1[y]][2] = 1
+                        dict_2[y] = [start]
+                    elif list_6[dic_1[y]][1] == temp_1[0]:
+                        list_6[dic_1[y]][2] += 1
+                        dict_2[y].append(start)
+                    temp_1[0] = 1
+                    start = t
+        long_sub = pd.DataFrame(list_6)
+        long_sub.to_excel(writer, sheet_name=sheet_name, startcol=44, startrow=2,
+                          index=False, header=False)
+        ###################################################################
+        # list for storing rank for overall range
+        list_3 = [[0 for i in range(8)] for j in range(2)]
+        list_3[0] = ['Rank of +1', 'Rank of -1', 'Rank of +2',
+                     'Rank of -2', 'Rank of +3', 'Rank of -3', 'Rank of +4', 'Rank of -4']
 
 
 ver = python_version()
