@@ -129,44 +129,44 @@ def attendance_report():
         df_4.to_excel(list_2[1][1]+".xlsx",
                       index=False, header=False)
 
-
-# Emailing
-try:
-    from_addr = "md2001ME39@gmail.com"  # sender address
-    # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
-    pass_of_sender = "bodzwwdevzuxevkr"
-    to_addr = "owais786siddiquei@gmail.com"  # Receiver address
-
-    # instance of MIMEMultipart
-    msg = MIMEMultipart()
-    msg['From'] = from_addr
-    msg['To'] = to_addr
-    msg['Subject'] = "2001ME39 attendance_report_duplicate_file"
-    body = "Name - Md 0wais Siddiquei and Roll No. - 2001ME39"
-    msg.attach(MIMEText(body, 'plain'))
-
-    # open the file to be sent
-    filename = "attendance_report_duplicate.xlsx"
+    # Emailing
     try:
-        attachment = open("attendance_report_consolidated.xlsx", "rb")
+        from_addr = "md2001ME39@gmail.com"  # sender address
+        # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
+        pass_of_sender = "bodzwwdevzuxevkr"
+        to_addr = "owais786siddiquei@gmail.com"  # Receiver address
+
+        # instance of MIMEMultipart
+        msg = MIMEMultipart()
+        msg['From'] = from_addr
+        msg['To'] = to_addr
+        msg['Subject'] = "2001ME39 attendance_report_duplicate_file"
+        body = "Name - Md 0wais Siddiquei and Roll No. - 2001ME39"
+        msg.attach(MIMEText(body, 'plain'))
+
+        # open the file to be sent
+        filename = "attendance_report_duplicate.xlsx"
+        try:
+            attachment = open("attendance_report_consolidated.xlsx", "rb")
+        except:
+            print("file is not available in output folder")
+
+        p = MIMEBase('application', 'octet-stream')
+        p.set_payload((attachment).read())
+        encoders.encode_base64(p)
+        p.add_header('Content-Disposition',
+                     "attachment; filename= %s" % filename)
+        msg.attach(p)
+
+        # creating SMTP session
+        connection = smtplib.SMTP('smtp.gmail.com', 587)
+        connection.starttls()
+        connection.login(from_addr, pass_of_sender)
+        text = msg.as_string()
+        connection.sendmail(from_addr, to_addr, text)
+        connection.quit()
     except:
-        print("file is not available in output folder")
-
-    p = MIMEBase('application', 'octet-stream')
-    p.set_payload((attachment).read())
-    encoders.encode_base64(p)
-    p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
-    msg.attach(p)
-
-    # creating SMTP session
-    connection = smtplib.SMTP('smtp.gmail.com', 587)
-    connection.starttls()
-    connection.login(from_addr, pass_of_sender)
-    text = msg.as_string()
-    connection.sendmail(from_addr, to_addr, text)
-    connection.quit()
-except:
-    print("Error in sending mail")
+        print("Error in sending mail")
 
 
 ver = python_version()
