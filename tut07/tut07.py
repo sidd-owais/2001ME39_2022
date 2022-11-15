@@ -156,6 +156,44 @@ def octant_analysis(mod=5000):
         oct_2 = pd.DataFrame(list_1)
         oct_2.to_excel(writer, sheet_name=sheet_name, startcol=13,
                        startrow=4, index=False, header=False)
+        ###############################################################
+        list_2 = [[0 for i in range(9)] for j in range(9)]
+        list_2[0] = ['Octant#', '+1', '-1', '+2', '-2', '+3', '-3', '+4', '-4']
+        for i in range(1, 9):
+            list_2[i][0] = list_2[0][i]
+
+        # Calculating Transition
+        dic_1 = {'+1': 1, '-1': 2, '+2': 3, '-2': 4,
+                 '+3': 5, '-3': 6, '+4': 7, '-4': 8}
+        for i in range(2, len(df)+2-1):
+            x = sheet.cell(i, 11).value
+            y = sheet.cell(i+1, 11).value
+            list_2[dic_1[x]][dic_1[y]] += 1
+
+        # Printing count of each Transition in overall data and appending it
+        oct_3 = pd.DataFrame(list_2)
+        oct_3.to_excel(writer, sheet_name=sheet_name, startcol=34,
+                       startrow=2, index=False, header=False)
+
+        # Calculating Transition in different range of data and appending in xlsx file
+
+        for i in range(grp):
+            for l in range(1, 9):
+                for k in range(1, 9):
+                    list_2[l][k] = 0
+            start = (i)*a+2
+            end = (i+1)*a+2
+            if (i == grp-1):
+                end = min(((i+1)*a+2), len(df)+2-1)
+            for j in range(start, end):
+                x = sheet.cell(j, 11).value
+                y = sheet.cell(j+1, 11).value
+                list_2[dic_1[x]][dic_1[y]] += 1
+            tran = pd.DataFrame(list_2)
+            tran.to_excel(writer, sheet_name=sheet_name, startcol=34, startrow=16 +
+                          (i*14), index=False, header=False)
+
+        ##################################################################################
 
 
 ver = python_version()
