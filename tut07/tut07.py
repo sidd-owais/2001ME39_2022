@@ -1,0 +1,120 @@
+from platform import python_version
+from datetime import datetime
+import os
+import pathlib
+from openpyxl import load_workbook, Workbook
+import pandas as pd
+from openpyxl.styles import PatternFill
+import math
+from scipy.stats import rankdata
+from openpyxl.styles import PatternFill, Border, Side
+start_time = datetime.now()
+
+# Help
+
+
+def octant_analysis(mod=5000):
+    directory = os.getcwd()
+    directory_1 = directory+"\input"
+    directory_2 = directory+"\output"
+
+    for file in os.listdir(directory_1):
+        df = pd.read_excel(directory_1+"\\"+file)
+        wb = load_workbook(directory_1+"\\"+file)
+        sheet = wb.active
+        sheet_name = wb.active.title
+        # Creating column for different velocity
+        sheet.cell(row=1, column=5).value = "U_avg"
+        sheet.cell(row=1, column=6).value = "V_avg"
+        sheet.cell(row=1, column=7).value = "W_avg"
+        sheet.cell(row=1, column=8).value = "U-U_avg"
+        sheet.cell(row=1, column=9).value = "V-V_avg"
+        sheet.cell(row=1, column=10).value = "W-W_avg"
+        sheet.cell(row=1, column=11).value = "Octant"
+        # Average of different coordinate velocity
+        U_avg = df["U"].mean()
+        V_avg = df["V"].mean()
+        W_avg = df["W"].mean()
+
+        # Appending means values to sheet
+        sheet.cell(row=2, column=5, value=round(U_avg, 3))
+        sheet.cell(row=2, column=6, value=round(V_avg, 3))
+        sheet.cell(row=2, column=7, value=round(W_avg, 3))
+
+        # Calculating difference of absolute and mean
+        for i in range(2, len(df)+2):
+            c2 = sheet.cell(i, 2).value
+            sheet.cell(i, 8, round(c2-U_avg, 3))
+        for i in range(2, len(df)+2):
+            c2 = sheet.cell(i, 3).value
+            sheet.cell(i, 9, round(c2-V_avg, 3))
+        for i in range(2, len(df)+2):
+            c2 = sheet.cell(i, 4).value
+            sheet.cell(i, 10, round(c2-W_avg, 3))
+        # List for overall count of octant
+        octant = [[0 for i in range(9)] for j in range(2)]
+        octant[0] = ['Octant ID', '+1', '-1',
+                     '+2', '-2', '+3', '-3', '+4', '-4']
+        octant[1][0] = "Overall Count"
+        # Deciding octant of different coordinate
+        for i in range(2, len(df)+2):
+            x = sheet.cell(i, 8).value
+            y = sheet.cell(i, 9).value
+            z = sheet.cell(i, 10).value
+            if (x >= 0 and y >= 0 and z >= 0):
+                sheet.cell(i, 11, "+1")
+                octant[1][1] += 1
+            if (x < 0 and y >= 0 and z >= 0):
+                sheet.cell(i, 11, "+2")
+                octant[1][3] += 1
+            if (x < 0 and y < 0 and z >= 0):
+                sheet.cell(i, 11, "+3")
+                octant[1][5] += 1
+            if (x >= 0 and y < 0 and z >= 0):
+                sheet.cell(i, 11, "+4")
+                octant[1][7] += 1
+            if (x >= 0 and y >= 0 and z < 0):
+                sheet.cell(i, 11, "-1")
+                octant[1][2] += 1
+            if (x < 0 and y >= 0 and z < 0):
+                sheet.cell(i, 11, "-2")
+                octant[1][4] += 1
+            if (x < 0 and y < 0 and z < 0):
+                sheet.cell(i, 11, "-3")
+                octant[1][6] += 1
+            if (x >= 0 and y < 0 and z < 0):
+                sheet.cell(i, 11, "-4")
+                octant[1][8] += 1
+        if not os.path.exists(directory_2):
+            os.makedirs(directory_2)
+        # **************************************************************
+        # mod value
+        a = mod
+        # *****************************************************************
+        file_name = file.split('.xlsx')[0] + \
+            "_octant_analysis_mod_"+str(a)+".xlsx"
+        os.chdir(directory_2)
+        wb.save(file_name)
+    # Appending octant list
+        writer = pd.ExcelWriter(file_name,
+                                mode='a', if_sheet_exists='overlay')
+        oct_1 = pd.DataFrame(octant)
+        oct_1.to_excel(writer, sheet_name=sheet_name, startcol=13,
+                       startrow=2, index=False, header=False)
+
+
+ver = python_version()
+
+if ver == "3.8.10":
+    print("Correct Version Installed")
+else:
+    print("Please install 3.8.10. Instruction are present in the GitHub Repo/Webmail. Url: https://pastebin.com/nvibxmjw")
+
+
+mod = 5000
+octant_analysis(mod)
+
+
+# This shall be the last lines of the code.
+end_time = datetime.now()
+print('Duration of Program Execution: {}'.format(end_time - start_time))
