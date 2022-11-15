@@ -145,7 +145,7 @@ def attendance_report():
         msg.attach(MIMEText(body, 'plain'))
 
         # open the file to be sent
-        filename = "attendance_report_duplicate.xlsx"
+        filename = "attendance_report_consolidated.xlsx"
         try:
             attachment = open("attendance_report_consolidated.xlsx", "rb")
         except:
