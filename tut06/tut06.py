@@ -86,6 +86,48 @@ def attendance_report():
                      count_1, index=False, header=False)
         writer.close()
         count_1 += 1
+    # Creating Report for every single student
+
+    list_0 = ['Date', 'Roll', 'Name',
+              'Total Attendance Count', 'Real', 'Duplicate', 'Invalid', 'Absent']
+    for ind in df_1.index:
+        temp = df[df["Attendance"].str.match(
+            str(df_1['Roll No'][ind])+'.*', na=False)].reset_index()
+        list_2 = [['', '', '', 0, 0, 0, 0, 0] for j in range(len(s_1)+2)]
+        list_2[0] = list_0
+        for keys in dat_1:
+            list_2[dat_1[keys]][0] = keys
+        if len(temp) == 0:
+            list_2[1][1] = df_1["Roll No"][ind]
+            list_2[1][2] = df_1["Name"][ind]
+            for i in range(2, 2+len(s_1)):
+                list_2[i][7] = 1
+        else:
+            list_2[1][1] = temp["Attendance"][0].split(" ")[0]
+            list_2[1][2] = temp["Attendance"][0].split(" ", 1)[1]
+            for i in range(len(temp)):
+                string_1 = temp["Timestamp"][i].split(" ")
+                date = pd.to_datetime(string_1[0], format="%d/%m/%Y")
+                if ((date.day_name() == "Monday") or (date.day_name() == "Thursday")):
+                    string_2 = string_1[1].split(":")
+                    date = date.date()
+                    date = date.strftime("%d/%m/%Y")
+                    if (string_2[0] == "14" or ((string_2[0] == "15") and (string_2[1] == "00") and (string_2[2] == "00"))):
+                        if (list_2[dat_1[date]][4]) == 0:
+                            list_2[dat_1[date]][4] = 1
+                            list_2[dat_1[date]][3] += 1
+                        else:
+                            list_2[dat_1[date]][5] += 1
+                            list_2[dat_1[date]][3] += 1
+                    else:
+                        list_2[dat_1[date]][6] += 1
+                        list_2[dat_1[date]][3] += 1
+            for keys in dat_1:
+                if list_2[dat_1[keys]][4] == 0:
+                    list_2[dat_1[keys]][7] = 1
+        df_4 = pd.DataFrame(list_2)
+        df_4.to_excel(list_2[1][1]+".xlsx",
+                      index=False, header=False)
 
 
 ver = python_version()
