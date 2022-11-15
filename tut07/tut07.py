@@ -384,6 +384,32 @@ def octant_analysis(mod=5000):
         sheet['AH4'] = "From"
         ##########################################################################
         wb.save(file_name)
+        # Calculating Count of Rank 1 Mod Values
+        writer = pd.ExcelWriter(file_name,
+                                mode='a', if_sheet_exists='overlay')
+        list_5 = [[0 for i in range(3)] for j in range(9)]
+        list_5[0] = ["Octant ID", "Octant Name", "Count of Rank 1 Mod Values"]
+        temp = ["Internal outward interaction", "External outward interaction", "External Ejection", "Internal Ejection",
+                "External inward interaction", "Internal inward interaction", "Internal sweep", "External sweep"]
+        for i in range(1, 9):
+            list_5[i][0] = octant[0][i]
+        for i in range(1, 9):
+            list_5[i][1] = temp[i-1]
+        count = 5
+        dict_3 = {"Internal outward interaction": 1, "External outward interaction": 2, "External Ejection": 3, "Internal Ejection": 4,
+                  "External inward interaction": 5, "Internal inward interaction": 6, "Internal sweep": 7, "External sweep": 8}
+        for i in range(grp):
+            ans = sheet.cell(row=count, column=32).value
+            list_5[dict_3[ans]][2] += 1
+            count += 1
+
+        oct_5 = pd.DataFrame(list_5)
+        oct_5.to_excel(writer, sheet_name=sheet_name, startcol=28, startrow=grp +
+                       8, index=False, header=False)
+        writer.close()
+        ##################################################################################################
+
+        #################################################################################
 
 
 ver = python_version()
