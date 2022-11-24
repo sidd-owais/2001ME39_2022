@@ -30,10 +30,24 @@ def scorecard():
     batting_order.append(Second_team)
 
     count = 0
+    for i in batting_order:
+        Batting = {"Batsman": [" ", "R", "B", "4s", "6s", "SR"]}
+        Bowling = {"BOWLER": ["O", "M", "R", "W", "NB", "WD", "ECO"]}
+        Bowling_total_ball = {}
+
+        Total_Run = 0
+        Total_wicket = 0
+        leg_byes = 0
+        wides = 0
+        byes = 0
+        no_ball = 0
+        Total_over = 0
+        Fall_of_wicket = ""
+        Current_run = 0
+        wicket_number = 0
 
 
 # Code
-
 ver = python_version()
 
 if ver == "3.8.10":
