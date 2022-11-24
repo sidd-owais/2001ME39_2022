@@ -246,6 +246,39 @@ def scorecard():
             if file_name not in os.listdir():
                 with open(file_name, "w") as f:
                     f.close()
+    # Batting
+        df_1 = pd.DataFrame(Batting).T
+        df_1 = df_1.to_markdown(tablefmt='plain')
+        list_1 = df_1.split('\n')
+        if count == 0:
+            with open(file_name, 'w') as fp:
+                for item in list_1[1:]:
+                    fp.write("%s\n" % item)
+                fp.write("\n")
+                fp.close()
+        else:
+            with open(file_name, 'a') as fp:
+                for item in list_1[1:]:
+                    fp.write("%s\n" % item)
+                fp.write("\n")
+                fp.close()
+
+        # Fall of wicket
+        text_file = open(r"scorecard.txt", "a")
+        text_file.write(Fall_of_wicket)
+        text_file.write("\n")
+        text_file.close()
+
+        # Bowling
+        df_2 = pd.DataFrame(Bowling, dtype=str).T
+        df_2 = df_2.to_markdown(tablefmt='plain')
+        list_2 = df_2.split('\n')
+        with open(file_name, 'a') as fp:
+            for item in list_2[1:]:
+                fp.write("%s\n" % item)
+            fp.write("\n")
+            fp.close()
+        count += 1
 
 
 # Code
