@@ -45,6 +45,64 @@ def scorecard():
         Fall_of_wicket = ""
         Current_run = 0
         wicket_number = 0
+    # Batting score card
+
+        f = open(i+".txt")
+        l = [x for x in f.readlines() if x != "\n"]
+        f.close()
+
+        for i in range(len(l)):
+            x = re.split(r',|\!', l[i])
+            info = x[0].split(' ', 1)
+            Bats_man_Name = re.split(r'to', info[1])[1]
+            if i == len(l)-1:
+                Total_over = info[0]
+            Bowler_Name = re.split(r'to', info[1])[0]
+            Event = x[1]  # SIX , FOUR , out , wides , leg byes ,run
+            if Bats_man_Name not in Batting.keys():
+                # (Run(0),(out or not and event),Ball(1),Four(2),Six(3),SR(4))
+                Batting[Bats_man_Name] = [0 for i in range(6)]
+                Batting[Bats_man_Name][0] = "not out"
+
+            if Event.strip() == "SIX":
+                Batting[Bats_man_Name][1] += 6
+                Batting[Bats_man_Name][2] += 1
+                Batting[Bats_man_Name][4] += 1
+                Batting[Bats_man_Name][5] = round(
+                    (Batting[Bats_man_Name][1]/Batting[Bats_man_Name][2])*100, 2)
+
+            if Event.strip() == "FOUR":
+                Batting[Bats_man_Name][1] += 4
+                Batting[Bats_man_Name][2] += 1
+                Batting[Bats_man_Name][3] += 1
+                Batting[Bats_man_Name][5] = round(
+                    (Batting[Bats_man_Name][1]/Batting[Bats_man_Name][2])*100, 2)
+            if re.split(r' ', Event)[-1].strip() == "run" or re.split(r' ', Event)[-1].strip() == "runs":
+                if re.split(r' ', Event)[1].strip() == "1":
+                    Batting[Bats_man_Name][1] += 1
+                if re.split(r' ', Event)[1].strip() == "2":
+                    Batting[Bats_man_Name][1] += 2
+                if re.split(r' ', Event)[1].strip() == "3":
+                    Batting[Bats_man_Name][1] += 3
+                Batting[Bats_man_Name][2] += 1
+                Batting[Bats_man_Name][5] = round(
+                    (Batting[Bats_man_Name][1]/Batting[Bats_man_Name][2])*100, 2)
+            if re.split(r' ', Event)[1].strip() == "out" or re.split(r' ', Event)[-1].strip() == "byes":
+                Batting[Bats_man_Name][2] += 1
+                Batting[Bats_man_Name][5] = round(
+                    (Batting[Bats_man_Name][1]/Batting[Bats_man_Name][2])*100, 2)
+                if re.split(r' ', Event)[1].strip() == "out":
+                    if re.split(r' ', Event)[-1].strip() == "Lbw":
+                        Batting[Bats_man_Name][0] = "lbw b " + Bowler_Name
+                    if re.split(r' ', Event)[-1].strip() == "Bowled":
+                        Batting[Bats_man_Name][0] = "b " + Bowler_Name
+                    if re.split(r' ', Event)[2].strip() == "Caught":
+                        caughter = re.search(
+                            '[\w\s]+by\s+([\w\s]+)', Event).group(1)
+                        Batting[Bats_man_Name][0] = "c " + \
+                            caughter + " b " + Bowler_Name
+        Batting["Extras"] = ["" for i in range(6)]
+        Batting["Totals"] = ["" for i in range(6)]
 
 
 # Code
