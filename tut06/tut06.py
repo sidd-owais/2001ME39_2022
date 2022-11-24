@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -31,6 +32,7 @@ def attendance_report():
     os.chdir(final_directory)
 
     # Creating consolidate report
+    list_for_consolidate_data = []
     for ind in df.index:
         d = df["Timestamp"][ind].split(" ")[0]
         d = d.replace("-", "/")
@@ -48,9 +50,8 @@ def attendance_report():
     h_1.append("Actual Lecture Taken")
     h_1.append("Total Real")
     h_1.append("% Attendance")
-    df_2 = pd.DataFrame(h_1).T
-    df_2.to_excel("attendance_report_consolidated.xlsx",
-                  index=False, header=False)
+    list_for_consolidate_data.append(h_1)
+
     l = len(h_1)
     total_lec_taken = len(s_1)
     count_1 = 0
@@ -81,13 +82,11 @@ def attendance_report():
                             list_1[3+len(s_1)] += 1
             list_1[4+len(s_1)] = (list_1[3+len(s_1)]/list_1[2+len(s_1)])*100
             list_1[4+len(s_1)] = round(list_1[4+len(s_1)], 2)
-        l_1 = pd.DataFrame(list_1).T
-        writer = pd.ExcelWriter('attendance_report_consolidated.xlsx',
-                                mode='a', if_sheet_exists='overlay')
-        l_1.to_excel(writer, startcol=0, startrow=1 +
-                     count_1, index=False, header=False)
-        writer.close()
-        count_1 += 1
+        list_for_consolidate_data.append(list_1)
+    df_2 = pd.DataFrame(list_for_consolidate_data)
+    df_2.to_csv("attendance_report_consolidated.csv",
+                index=False, header=False)
+
     # Creating Report for every single student
 
     list_0 = ['Date', 'Roll', 'Name',
@@ -130,29 +129,30 @@ def attendance_report():
                 if list_2[dat_1[keys]][4] == 0:
                     list_2[dat_1[keys]][7] = 1
         df_4 = pd.DataFrame(list_2)
-        df_4.to_excel(list_2[1][1]+".xlsx",
-                      index=False, header=False)
+        df_4.to_csv(list_2[1][1]+".csv",
+                    index=False, header=False)
 
     # Emailing
     try:
         from_addr = "md2001ME39@gmail.com"  # sender address
         # (Important)I am using app password beacuse in gmail there no other option to mail due to security reason.
         pass_of_sender = "bodzwwdevzuxevkr"
-        to_addr = "cs3842022@gmail.com"  # Receiver address
+        # Receiver address
+        to_addr = "cs3842022@gmail.com"
 
         # instance of MIMEMultipart
         msg = MIMEMultipart()
         msg['From'] = from_addr
         msg['To'] = to_addr
-        msg['Subject'] = "2001ME39 attendance_report_consolidated.xlsx file"
+        msg['Subject'] = "2001ME39 attendance_report_consolidated.csv file"
         body = "Name - Md 0wais Siddiquei and Roll No. - 2001ME39"
         msg.attach(MIMEText(body, 'plain'))
 
         # open the file to be sent
         os.chdir(final_directory)
-        filename = "attendance_report_consolidated.xlsx"
+        filename = "attendance_report_consolidated.csv"
         try:
-            attachment = open("attendance_report_consolidated.xlsx", "rb")
+            attachment = open("attendance_report_consolidated.csv", "rb")
         except:
             print("file is not available in output folder")
 
