@@ -795,6 +795,20 @@ def proj_octant_gui():
             st.text(filename)
             st.download_button(label="Download File", file_name=file.split('.xlsx')[0] +
                                "_octant_analysis_mod_"+str(a)+".xlsx", data=data_1)
+    st.header("Project - 2")
+    val = st.number_input(label="Enter Mod Value", min_value=1, step=1)
+    file = st.file_uploader("Choose a File", type=["xlsx"])
+    if st.button("Compute"):
+        if file == None:
+            st.write("Please select a file")
+        else:
+            fun(file, val)
+    direc = st.text_input(label="Enter Path of Directory")
+    if st.button("Compute_all_file"):
+        if direc == "":
+            st.write("Please give a path")
+        else:
+            fun_1(direc, val)
 
 
 # Code
