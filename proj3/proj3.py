@@ -1021,3 +1021,54 @@ def fun(corr, SNR, Lambda, k, s_1, s_2):
     duration_timestamp_to_file(name, duration)
 
     print("-------------------------------------------------------------------")
+
+
+st.title("Project-3")
+constant_fk2d = st.number_input(
+    label="constant_fk2d", min_value=None, max_value=None)
+multiplying_factor_3d = st.number_input(
+    label="multiplying_factor_3d", min_value=None, max_value=None)
+Shear_velocity = st.number_input(
+    label="Shear_velocity", min_value=None, max_value=None)
+
+filtering_method = ['1. C', '2. S', '3. A', '4. C & S',
+                    '5. C & A', '6. S & A', '7. C & S & A', '8. all combine']
+filter_method_1 = st.radio(
+    'Choose Filtering Method from Above', filtering_method)
+s_1 = int(filter_method_1.split('.')[0])
+corr = 1
+SNR = 1
+Lambda = 1
+k = 1
+if filter_method_1 == '1. C'.strip():
+    corr = st.number_input(label='Enter thresold value C')
+elif filter_method_1 == '2. S'.strip():
+    SNR = st.number_input(label='Enter thresold value S')
+elif filter_method_1 == '3. A'.strip():
+    Lambda = st.number_input(label='Enter Lambda value for A')
+    k = st.number_input(label='Enter k value for A')
+elif filter_method_1 == '4. C & S'.strip():
+    corr = st.number_input(label='Enter thresold value C')
+    SNR = st.number_input(label='Enter thresold value S')
+elif filter_method_1 == '5. C & A'.strip():
+    corr = st.number_input(label='Enter thresold value C')
+    Lambda = st.number_input(label='Enter Lambda value for A')
+    k = st.number_input(label='Enter k value for A')
+elif filter_method_1 == '6. S & A'.strip():
+    SNR = st.number_input(label='Enter thresold value S')
+    Lambda = st.number_input(label='Enter Lambda value for A')
+    k = st.number_input(label='Enter k value for A')
+elif filter_method_1 == '7. C & S & A'.strip() or filter_method_1 == '8. all combine'.strip():
+    corr = st.number_input(label='Enter thresold value C')
+    SNR = st.number_input(label='Enter thresold value S')
+    Lambda = st.number_input(label='Enter Lambda value for A')
+    k = st.number_input(label='Enter k value for A')
+
+Replacement_method = ['1. previous point', '2. 2*last-2nd_last', '3. overall_mean',
+                      '4. 12_point_strategy', '5. mean of previous 2 point',
+                      '6. all seqential', '7. all parallel']
+Replacement_method_1 = st.radio(
+    'Choose Replacement Method from Above', Replacement_method)
+s_2 = int(Replacement_method_1.split('.')[0])
+if st.button("Compute"):
+    fun(corr, SNR, Lambda, k, s_1, s_2)
