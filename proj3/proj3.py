@@ -13,7 +13,9 @@ def fun(corr, SNR, Lambda, k, s_1, s_2):
     start_time = datetime.now()
     print(start_time.strftime("%c"))
     # pls enter exact file location
-    os.chdir(r'C:\Users\MD OWAIS SIDDIQUEI\Desktop\project_03')
+    # os.chdir(r'C:\Users\MD OWAIS SIDDIQUEI\Desktop\project_03')
+    os.chdir(
+        r'C:\Users\MD OWAIS SIDDIQUEI\OneDrive\Documents\GitHub\2001ME39_2022\proj3')
     fileList = open('input_file_list.txt', 'r')
     files = fileList.readlines()
     for file in files:
