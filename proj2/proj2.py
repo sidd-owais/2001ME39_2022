@@ -17,8 +17,13 @@ start_time = datetime.now()
 def proj_octant_gui():
 
     def fun(input, val):
-        df = pd.read_excel(input)
-        wb = load_workbook(input)
+        df = pd.read_excel(input).loc[:1000]
+        # mod value
+        a = val
+        file_name = (input.name).split('.xlsx')[0] + \
+            "_octant_analysis_mod_"+str(a)+".xlsx"
+        df.to_excel(file_name, index=False, header=True)
+        wb = load_workbook(file_name)
         sheet = wb.active
         sheet_name = wb.active.title
         # Creating column for different velocity
@@ -86,14 +91,8 @@ def proj_octant_gui():
             if (x >= 0 and y < 0 and z < 0):
                 octant_sign[i-2][0] = "-4"
                 octant[1][8] += 1
-        # **************************************************************
-        # mod value
-        a = val
-        # *****************************************************************
-        file_name = (input.name).split('.xlsx')[0] + \
-            "_octant_analysis_mod_"+str(a)+".xlsx"
         wb.save(file_name)
-
+        # *****************************************************************
         # Appending octant list
         writer = pd.ExcelWriter(file_name,
                                 mode='a', if_sheet_exists='overlay')
@@ -403,12 +402,18 @@ def proj_octant_gui():
         st.text(filename)
         st.download_button(label="Download File", file_name=(input.name).split('.xlsx')[0] +
                            "_octant_analysis_mod_"+str(a)+".xlsx", data=data_1)
+
     #################################################################################################################################
 
     def fun_1(input_path, val):
         for file in os.listdir(input_path):
-            df = pd.read_excel(input_path+"\\"+file)
-            wb = load_workbook(input_path+"\\"+file)
+            df = pd.read_excel(input_path+"\\"+file).loc[:1000]
+            # mod value
+            a = val
+            file_name = file.split('.xlsx')[0] + \
+                "_octant_analysis_mod_"+str(a)+".xlsx"
+            df.to_excel(file_name, index=False, header=True)
+            wb = load_workbook(file_name)
             sheet = wb.active
             sheet_name = wb.active.title
             # Creating column for different velocity
@@ -476,14 +481,8 @@ def proj_octant_gui():
                 if (x >= 0 and y < 0 and z < 0):
                     octant_sign[i-2][0] = "-4"
                     octant[1][8] += 1
-            # **************************************************************
-            # mod value
-            a = val
-            # *****************************************************************
-            file_name = file.split('.xlsx')[0] + \
-                "_octant_analysis_mod_"+str(a)+".xlsx"
             wb.save(file_name)
-
+            # *****************************************************************************
             # Appending octant list
             writer = pd.ExcelWriter(file_name,
                                     mode='a', if_sheet_exists='overlay')
